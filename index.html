@@ -384,6 +384,84 @@
             background: transparent;
         }
 
+        .day-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .day-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        .modal-habits {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .modal-habit {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            background: var(--light);
+            transition: var(--transition);
+        }
+
+        .modal-habit:hover {
+            background: #e9ecef;
+        }
+
+        .modal-habit-checkbox {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .modal-habit-name {
+            flex: 1;
+        }
+
         .habits-tracker {
             margin-top: 30px;
         }
@@ -660,6 +738,18 @@
             </div>
         </div>
 
+        <div class="day-modal" id="day-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="modal-date">January 1, 2023</h2>
+                    <button class="close-modal" id="close-modal">&times;</button>
+                </div>
+                <div class="modal-habits" id="modal-habits">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
         <div class="achievement-notification" id="achievement-notification">
             <div class="achievement-icon">
                 <i class="fas fa-trophy"></i>
@@ -690,6 +780,7 @@
         let currentDate = new Date();
         let currentMonth = currentDate.getMonth();
         let currentYear = currentDate.getFullYear();
+        let selectedDay = null;
 
         // DOM elements
         const monthSelect = document.getElementById('month-select');
@@ -716,6 +807,19 @@
         const rewardsGridEl = document.getElementById('rewards-grid');
         const achievementNotification = document.getElementById('achievement-notification');
         const achievementDescEl = document.getElementById('achievement-desc');
+        const dayModal = document.getElementById('day-modal');
+        const modalDateEl = document.getElementById('modal-date');
+        const modalHabitsEl = document.getElementById('modal-habits');
+        const closeModalBtn = document.getElementById('close-modal');
+
+        // Habit icons
+        const habitIcons = [
+            'fas fa-dumbbell', 'fas fa-book', 'fas fa-bed', 'fas fa-utensils',
+            'fas fa-running', 'fas fa-meditation', 'fas fa-music', 'fas fa-paint-brush',
+            'fas fa-code', 'fas fa-language', 'fas fa-pencil-alt', 'fas fa-seedling',
+            'fas fa-water', 'fas fa-sun', 'fas fa-moon', 'fas fa-heart',
+            'fas fa-brain', 'fas fa-hands-helping', 'fas fa-smile', 'fas fa-star'
+        ];
 
         // Rewards data
         const rewards = [
@@ -810,6 +914,12 @@
                     addHabit();
                 }
             });
+            closeModalBtn.addEventListener('click', closeDayModal);
+            dayModal.addEventListener('click', (e) => {
+                if (e.target === dayModal) {
+                    closeDayModal();
+                }
+            });
         }
 
         // Navigation functions
@@ -858,9 +968,12 @@
             const habitName = habitInput.value.trim();
             if (!habitName) return;
             
+            const randomIcon = habitIcons[Math.floor(Math.random() * habitIcons.length)];
+            
             const newHabit = {
                 id: Date.now(),
                 name: habitName,
+                icon: randomIcon,
                 checks: {},
                 createdAt: new Date().toISOString()
             };
@@ -869,6 +982,7 @@
             saveHabits();
             renderHabitsList();
             renderHabitsTracker();
+            renderCalendar();
             updateStats();
             habitInput.value = '';
             
@@ -881,6 +995,7 @@
             saveHabits();
             renderHabitsList();
             renderHabitsTracker();
+            renderCalendar();
             updateStats();
         }
 
@@ -900,6 +1015,9 @@
             }
             
             saveHabits();
+            if (selectedDay) {
+                renderDayModal(selectedDay);
+            }
             renderHabitsTracker();
             renderCalendar();
             updateStats();
@@ -1040,7 +1158,7 @@
                 
                 const habitName = document.createElement('div');
                 habitName.className = 'habit-name';
-                habitName.textContent = habit.name;
+                habitName.innerHTML = `<i class="${habit.icon}"></i> ${habit.name}`;
                 
                 const deleteBtn = document.createElement('button');
                 deleteBtn.className = 'delete-habit';
@@ -1114,6 +1232,10 @@
                 
                 dayEl.appendChild(dayNumber);
                 dayEl.appendChild(dayHabits);
+                
+                // Add click event to open day modal
+                dayEl.addEventListener('click', () => openDayModal(day));
+                
                 calendarEl.appendChild(dayEl);
             }
         }
@@ -1152,7 +1274,7 @@
                 trackerRow.className = 'tracker-row';
                 
                 const habitNameCell = document.createElement('div');
-                habitNameCell.textContent = habit.name;
+                habitNameCell.innerHTML = `<i class="${habit.icon}"></i> ${habit.name}`;
                 trackerRow.appendChild(habitNameCell);
                 
                 const today = new Date();
@@ -1181,6 +1303,53 @@
                 
                 habitsTrackerEl.appendChild(trackerRow);
             });
+        }
+
+        function openDayModal(day) {
+            selectedDay = day;
+            const dateStr = `${currentYear}-${currentMonth + 1}-${day}`;
+            const date = new Date(currentYear, currentMonth, day);
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            modalDateEl.textContent = date.toLocaleDateString('en-US', options);
+            
+            renderDayModal(day);
+            dayModal.classList.add('active');
+        }
+
+        function renderDayModal(day) {
+            modalHabitsEl.innerHTML = '';
+            const dateStr = `${currentYear}-${currentMonth + 1}-${day}`;
+            
+            if (habits.length === 0) {
+                modalHabitsEl.innerHTML = '<p style="text-align: center; color: #6c757d;">No habits to track</p>';
+                return;
+            }
+            
+            habits.forEach(habit => {
+                const isChecked = habit.checks[dateStr];
+                
+                const habitEl = document.createElement('div');
+                habitEl.className = 'modal-habit';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'modal-habit-checkbox';
+                checkbox.checked = isChecked;
+                checkbox.addEventListener('change', () => toggleCheck(habit.id, dateStr));
+                
+                const habitName = document.createElement('div');
+                habitName.className = 'modal-habit-name';
+                habitName.innerHTML = `<i class="${habit.icon}"></i> ${habit.name}`;
+                
+                habitEl.appendChild(checkbox);
+                habitEl.appendChild(habitName);
+                modalHabitsEl.appendChild(habitEl);
+            });
+        }
+
+        function closeDayModal() {
+            dayModal.classList.remove('active');
+            selectedDay = null;
         }
 
         function updateStats() {
