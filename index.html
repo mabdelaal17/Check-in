@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HabitHero - Level Up Your Life</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --primary-dark: #554fd8;
+            --secondary: #FF6584;
+            --accent: #36D1DC;
+            --light: #F8F9FA;
+            --dark: #2D3748;
+            --gray: #A0AEC0;
+            --success: #48BB78;
+            --warning: #ED8936;
+            --danger: #F56565;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .subtitle {
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+
+        .app-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .sidebar {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin-right: 15px;
+        }
+
+        .user-info h3 {
+            margin-bottom: 5px;
+        }
+
+        .level-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+
+        .level-badge {
+            background: var(--primary);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .xp-bar {
+            flex: 1;
+            height: 8px;
+            background: #eee;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .xp-progress {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--light);
+            padding: 15px;
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        .month-selector {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .month-selector select {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            background: white;
+            font-size: 1rem;
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        .month-selector button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .month-selector button:hover {
+            background: var(--primary-dark);
+        }
+
+        .add-habit-form {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .add-habit-form input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius) 0 0 var(--border-radius);
+            font-size: 1rem;
+        }
+
+        .add-habit-form button {
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            padding: 0 20px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .add-habit-form button:hover {
+            background: #3da766;
+        }
+
+        .habits-list {
+            max-height: 300px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .habit-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background: var(--light);
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .habit-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .habit-name {
+            font-weight: 600;
+        }
+
+        .delete-habit {
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .delete-habit:hover {
+            background: #e53e3e;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .current-month {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stats {
+            display: flex;
+            gap: 15px;
+        }
+
+        .stat {
+            background: var(--light);
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+        }
+
+        .stat span {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .day-header {
+            text-align: center;
+            font-weight: 600;
+            color: var(--gray);
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .day {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--light);
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .day:hover {
+            background: #e9ecef;
+        }
+
+        .day-number {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .day-habits {
+            display: flex;
+            gap: 3px;
+        }
+
+        .habit-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--primary);
+        }
+
+        .completed {
+            background: var(--success);
+        }
+
+        .today {
+            background: var(--primary);
+            color: white;
+        }
+
+        .empty {
+            background: transparent;
+            cursor: default;
+        }
+
+        .empty:hover {
+            background: transparent;
+        }
+
+        .habits-tracker {
+            margin-top: 30px;
+        }
+
+        .tracker-header {
+            display: grid;
+            grid-template-columns: 1fr repeat(31, 40px);
+            gap: 5px;
+            padding: 15px;
+            background: var(--light);
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            font-weight: 600;
+            overflow-x: auto;
+        }
+
+        .tracker-row {
+            display: grid;
+            grid-template-columns: 1fr repeat(31, 40px);
+            gap: 5px;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+            overflow-x: auto;
+        }
+
+        .tracker-row:last-child {
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+        }
+
+        .day-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 40px;
+            background: var(--light);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .day-cell:hover {
+            background: #e9ecef;
+        }
+
+        .day-cell.checked {
+            background: var(--success);
+            color: white;
+        }
+
+        .day-cell.today {
+            border: 2px solid var(--primary);
+        }
+
+        .empty-cell {
+            background: transparent;
+            cursor: default;
+        }
+
+        .empty-cell:hover {
+            background: transparent;
+        }
+
+        .rewards-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: var(--light);
+            border-radius: var(--border-radius);
+        }
+
+        .rewards-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .rewards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .reward-card {
+            background: white;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: var(--transition);
+        }
+
+        .reward-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .reward-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .reward-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .reward-desc {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+
+        .reward-cost {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .locked {
+            opacity: 0.5;
+        }
+
+        .achievement-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(150%);
+            transition: transform 0.5s ease;
+            z-index: 1000;
+        }
+
+        .achievement-notification.show {
+            transform: translateX(0);
+        }
+
+        .achievement-icon {
+            font-size: 1.5rem;
+            color: gold;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Scrollbar customization */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-chart-line"></i> HabitHero</h1>
+            <p class="subtitle">Level up your life by building positive habits</p>
+        </header>
+
+        <div class="app-container">
+            <div class="sidebar">
+                <div class="user-profile">
+                    <div class="avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-info">
+                        <h3>Habit Hero</h3>
+                        <div class="level-info">
+                            <div class="level-badge">Level <span id="user-level">1</span></div>
+                            <div class="xp-bar">
+                                <div class="xp-progress" id="xp-progress" style="width: 20%;"></div>
+                            </div>
+                        </div>
+                        <div class="xp-text"><span id="current-xp">50</span>/<span id="next-level-xp">250</span> XP</div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="habits-count">0</div>
+                        <div class="stat-label">Habits</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="completion-rate">0%</div>
+                        <div class="stat-label">Completion</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="current-streak">0</div>
+                        <div class="stat-label">Day Streak</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-points">0</div>
+                        <div class="stat-label">Points</div>
+                    </div>
+                </div>
+
+                <div class="month-selector">
+                    <button id="prev-month"><i class="fas fa-chevron-left"></i></button>
+                    <select id="month-select">
+                        <!-- Will be populated by JavaScript -->
+                    </select>
+                    <select id="year-select">
+                        <!-- Will be populated by JavaScript -->
+                    </select>
+                    <button id="next-month"><i class="fas fa-chevron-right"></i></button>
+                </div>
+
+                <div class="add-habit-form">
+                    <input type="text" id="habit-input" placeholder="Add a new habit...">
+                    <button id="add-habit"><i class="fas fa-plus"></i></button>
+                </div>
+
+                <div class="habits-list" id="habits-list">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="main-content">
+                <div class="calendar-header">
+                    <div class="current-month" id="current-month">January 2023</div>
+                    <div class="stats">
+                        <div class="stat">Completion: <span id="month-completion">0%</span></div>
+                        <div class="stat">Checked: <span id="checked-days">0</span>/<span id="total-days">0</span></div>
+                    </div>
+                </div>
+
+                <div class="calendar" id="calendar">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+
+                <div class="habits-tracker" id="habits-tracker">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+
+                <div class="rewards-section">
+                    <div class="rewards-title">
+                        <i class="fas fa-trophy"></i>
+                        <h2>Your Rewards</h2>
+                    </div>
+                    <div class="rewards-grid" id="rewards-grid">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="achievement-notification" id="achievement-notification">
+            <div class="achievement-icon">
+                <i class="fas fa-trophy"></i>
+            </div>
+            <div class="achievement-text">
+                <div class="achievement-title">Achievement Unlocked!</div>
+                <div class="achievement-desc" id="achievement-desc">First Habit Completed</div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Your data is saved locally - it won't be lost when you close the browser</p>
+        </footer>
+    </div>
+
+    <script>
+        // Data and global variables
+        let habits = JSON.parse(localStorage.getItem('habits')) || [];
+        let userData = JSON.parse(localStorage.getItem('userData')) || {
+            level: 1,
+            xp: 0,
+            points: 0,
+            streak: 0,
+            lastActive: null,
+            unlockedRewards: []
+        };
+        
+        let currentDate = new Date();
+        let currentMonth = currentDate.getMonth();
+        let currentYear = currentDate.getFullYear();
+
+        // DOM elements
+        const monthSelect = document.getElementById('month-select');
+        const yearSelect = document.getElementById('year-select');
+        const prevMonthBtn = document.getElementById('prev-month');
+        const nextMonthBtn = document.getElementById('next-month');
+        const habitInput = document.getElementById('habit-input');
+        const addHabitBtn = document.getElementById('add-habit');
+        const habitsList = document.getElementById('habits-list');
+        const currentMonthEl = document.getElementById('current-month');
+        const completionRateEl = document.getElementById('completion-rate');
+        const monthCompletionEl = document.getElementById('month-completion');
+        const habitsCountEl = document.getElementById('habits-count');
+        const checkedDaysEl = document.getElementById('checked-days');
+        const totalDaysEl = document.getElementById('total-days');
+        const calendarEl = document.getElementById('calendar');
+        const habitsTrackerEl = document.getElementById('habits-tracker');
+        const userLevelEl = document.getElementById('user-level');
+        const currentXpEl = document.getElementById('current-xp');
+        const nextLevelXpEl = document.getElementById('next-level-xp');
+        const xpProgressEl = document.getElementById('xp-progress');
+        const currentStreakEl = document.getElementById('current-streak');
+        const totalPointsEl = document.getElementById('total-points');
+        const rewardsGridEl = document.getElementById('rewards-grid');
+        const achievementNotification = document.getElementById('achievement-notification');
+        const achievementDescEl = document.getElementById('achievement-desc');
+
+        // Rewards data
+        const rewards = [
+            { id: 1, name: "Coffee Break", description: "Take a 15-minute break with your favorite drink", cost: 50, icon: "fa-coffee" },
+            { id: 2, name: "Movie Night", description: "Enjoy a movie of your choice", cost: 100, icon: "fa-film" },
+            { id: 3, name: "Book", description: "Get a new book for your collection", cost: 200, icon: "fa-book" },
+            { id: 4, name: "Day Off", description: "Take a guilt-free day off from habits", cost: 300, icon: "fa-umbrella-beach" },
+            { id: 5, name: "Special Meal", description: "Treat yourself to a nice meal", cost: 500, icon: "fa-utensils" },
+            { id: 6, name: "Weekend Trip", description: "Plan a small weekend getaway", cost: 1000, icon: "fa-car" }
+        ];
+
+        // Initialize the app
+        function init() {
+            checkStreak();
+            populateMonthSelect();
+            populateYearSelect();
+            renderHabitsList();
+            renderCalendar();
+            renderHabitsTracker();
+            updateStats();
+            updateUserProfile();
+            renderRewards();
+            setupEventListeners();
+        }
+
+        // Check and update streak
+        function checkStreak() {
+            const today = new Date().toDateString();
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            const yesterdayStr = yesterday.toDateString();
+            
+            if (userData.lastActive === today) {
+                // Already updated today
+                return;
+            } else if (userData.lastActive === yesterdayStr) {
+                // Consecutive day
+                userData.streak++;
+            } else {
+                // Broken streak
+                userData.streak = 1;
+            }
+            
+            userData.lastActive = today;
+            saveUserData();
+        }
+
+        // Populate month select
+        function populateMonthSelect() {
+            const months = [
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+            ];
+            
+            monthSelect.innerHTML = '';
+            months.forEach((month, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = month;
+                if (index === currentMonth) {
+                    option.selected = true;
+                }
+                monthSelect.appendChild(option);
+            });
+        }
+
+        // Populate year select
+        function populateYearSelect() {
+            const currentYear = new Date().getFullYear();
+            yearSelect.innerHTML = '';
+            
+            for (let year = currentYear - 5; year <= currentYear + 5; year++) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                if (year === currentYear) {
+                    option.selected = true;
+                }
+                yearSelect.appendChild(option);
+            }
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            prevMonthBtn.addEventListener('click', goToPrevMonth);
+            nextMonthBtn.addEventListener('click', goToNextMonth);
+            monthSelect.addEventListener('change', changeMonth);
+            yearSelect.addEventListener('change', changeMonth);
+            addHabitBtn.addEventListener('click', addHabit);
+            habitInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addHabit();
+                }
+            });
+        }
+
+        // Navigation functions
+        function goToPrevMonth() {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            updateMonthYear();
+            renderCalendar();
+            renderHabitsTracker();
+        }
+
+        function goToNextMonth() {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            updateMonthYear();
+            renderCalendar();
+            renderHabitsTracker();
+        }
+
+        function changeMonth() {
+            currentMonth = parseInt(monthSelect.value);
+            currentYear = parseInt(yearSelect.value);
+            updateMonthYear();
+            renderCalendar();
+            renderHabitsTracker();
+        }
+
+        function updateMonthYear() {
+            const months = [
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+            ];
+            currentMonthEl.textContent = `${months[currentMonth]} ${currentYear}`;
+            monthSelect.value = currentMonth;
+            yearSelect.value = currentYear;
+        }
+
+        // Habit management functions
+        function addHabit() {
+            const habitName = habitInput.value.trim();
+            if (!habitName) return;
+            
+            const newHabit = {
+                id: Date.now(),
+                name: habitName,
+                checks: {},
+                createdAt: new Date().toISOString()
+            };
+            
+            habits.push(newHabit);
+            saveHabits();
+            renderHabitsList();
+            renderHabitsTracker();
+            updateStats();
+            habitInput.value = '';
+            
+            // Add XP for creating a new habit
+            addXP(10);
+        }
+
+        function deleteHabit(id) {
+            habits = habits.filter(habit => habit.id !== id);
+            saveHabits();
+            renderHabitsList();
+            renderHabitsTracker();
+            updateStats();
+        }
+
+        function toggleCheck(habitId, date) {
+            const habit = habits.find(h => h.id === habitId);
+            if (!habit) return;
+            
+            if (habit.checks[date]) {
+                delete habit.checks[date];
+            } else {
+                habit.checks[date] = true;
+                // Add XP for completing a habit
+                addXP(5);
+                
+                // Check for achievements
+                checkAchievements();
+            }
+            
+            saveHabits();
+            renderHabitsTracker();
+            renderCalendar();
+            updateStats();
+        }
+
+        // XP and level system
+        function addXP(amount) {
+            userData.xp += amount;
+            userData.points += amount;
+            
+            const xpForNextLevel = getXPForLevel(userData.level + 1);
+            
+            if (userData.xp >= xpForNextLevel) {
+                userData.level++;
+                showAchievement(`Level ${userData.level} Unlocked!`, `You've reached level ${userData.level}`);
+            }
+            
+            updateUserProfile();
+            saveUserData();
+        }
+
+        function getXPForLevel(level) {
+            return level * 100; // 100, 200, 300, etc.
+        }
+
+        function updateUserProfile() {
+            userLevelEl.textContent = userData.level;
+            currentXpEl.textContent = userData.xp;
+            
+            const xpForNextLevel = getXPForLevel(userData.level + 1);
+            nextLevelXpEl.textContent = xpForNextLevel;
+            
+            const xpForCurrentLevel = getXPForLevel(userData.level);
+            const xpInLevel = userData.xp - xpForCurrentLevel;
+            const xpNeeded = xpForNextLevel - xpForCurrentLevel;
+            const progressPercent = (xpInLevel / xpNeeded) * 100;
+            
+            xpProgressEl.style.width = `${progressPercent}%`;
+            currentStreakEl.textContent = userData.streak;
+            totalPointsEl.textContent = userData.points;
+        }
+
+        // Achievement system
+        function checkAchievements() {
+            const totalChecks = Object.values(habits).reduce((total, habit) => {
+                return total + Object.keys(habit.checks).length;
+            }, 0);
+            
+            if (totalChecks === 1) {
+                showAchievement("First Step", "You completed your first habit!");
+            } else if (totalChecks === 10) {
+                showAchievement("Consistency", "You've completed 10 habits!");
+            } else if (totalChecks === 50) {
+                showAchievement("Habit Master", "You've completed 50 habits!");
+            }
+            
+            if (habits.length === 1) {
+                showAchievement("New Beginnings", "You created your first habit!");
+            } else if (habits.length === 5) {
+                showAchievement("Ambitious", "You're tracking 5 habits!");
+            }
+            
+            if (userData.streak === 3) {
+                showAchievement("On Fire", "3-day streak! Keep it up!");
+            } else if (userData.streak === 7) {
+                showAchievement("Week Warrior", "7-day streak! Amazing!");
+            } else if (userData.streak === 30) {
+                showAchievement("Month Master", "30-day streak! Incredible!");
+            }
+        }
+
+        function showAchievement(title, description) {
+            achievementDescEl.textContent = description;
+            achievementNotification.classList.add('show');
+            
+            setTimeout(() => {
+                achievementNotification.classList.remove('show');
+            }, 5000);
+        }
+
+        // Rewards system
+        function renderRewards() {
+            rewardsGridEl.innerHTML = '';
+            
+            rewards.forEach(reward => {
+                const rewardCard = document.createElement('div');
+                rewardCard.className = `reward-card ${userData.points >= reward.cost ? '' : 'locked'}`;
+                
+                rewardCard.innerHTML = `
+                    <div class="reward-icon">
+                        <i class="fas ${reward.icon}"></i>
+                    </div>
+                    <div class="reward-name">${reward.name}</div>
+                    <div class="reward-desc">${reward.description}</div>
+                    <div class="reward-cost">${reward.cost} points</div>
+                `;
+                
+                if (userData.points >= reward.cost) {
+                    rewardCard.addEventListener('click', () => purchaseReward(reward));
+                }
+                
+                rewardsGridEl.appendChild(rewardCard);
+            });
+        }
+
+        function purchaseReward(reward) {
+            if (userData.points >= reward.cost) {
+                userData.points -= reward.cost;
+                userData.unlockedRewards.push(reward.id);
+                saveUserData();
+                updateUserProfile();
+                renderRewards();
+                showAchievement("Reward Unlocked!", `You've unlocked: ${reward.name}`);
+            }
+        }
+
+        // Data persistence
+        function saveHabits() {
+            localStorage.setItem('habits', JSON.stringify(habits));
+        }
+
+        function saveUserData() {
+            localStorage.setItem('userData', JSON.stringify(userData));
+        }
+
+        // Rendering functions
+        function renderHabitsList() {
+            habitsList.innerHTML = '';
+            
+            if (habits.length === 0) {
+                habitsList.innerHTML = '<p style="text-align: center; color: #6c757d;">No habits added yet</p>';
+                return;
+            }
+            
+            habits.forEach(habit => {
+                const habitItem = document.createElement('div');
+                habitItem.className = 'habit-item';
+                
+                const habitName = document.createElement('div');
+                habitName.className = 'habit-name';
+                habitName.textContent = habit.name;
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'delete-habit';
+                deleteBtn.innerHTML = '<i class="fas fa-times"></i>';
+                deleteBtn.addEventListener('click', () => deleteHabit(habit.id));
+                
+                habitItem.appendChild(habitName);
+                habitItem.appendChild(deleteBtn);
+                
+                habitsList.appendChild(habitItem);
+            });
+        }
+
+        function renderCalendar() {
+            calendarEl.innerHTML = '';
+            
+            // Add day headers
+            const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            dayHeaders.forEach(day => {
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'day-header';
+                dayHeader.textContent = day;
+                calendarEl.appendChild(dayHeader);
+            });
+            
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            
+            // Add empty days at the start
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'day empty';
+                calendarEl.appendChild(emptyDay);
+            }
+            
+            // Add days of the month
+            const today = new Date();
+            const isCurrentMonth = today.getMonth() === currentMonth && today.getFullYear() === currentYear;
+            
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayEl = document.createElement('div');
+                dayEl.className = 'day';
+                
+                if (isCurrentMonth && day === today.getDate()) {
+                    dayEl.classList.add('today');
+                }
+                
+                const dayNumber = document.createElement('div');
+                dayNumber.className = 'day-number';
+                dayNumber.textContent = day;
+                
+                const dayHabits = document.createElement('div');
+                dayHabits.className = 'day-habits';
+                
+                // Calculate completed habits for this day
+                const dateStr = `${currentYear}-${currentMonth + 1}-${day}`;
+                let completedCount = 0;
+                
+                habits.forEach(habit => {
+                    if (habit.checks[dateStr]) {
+                        completedCount++;
+                    }
+                });
+                
+                // Show dots for completed habits (max 3)
+                for (let i = 0; i < Math.min(completedCount, 3); i++) {
+                    const habitDot = document.createElement('div');
+                    habitDot.className = 'habit-dot completed';
+                    dayHabits.appendChild(habitDot);
+                }
+                
+                dayEl.appendChild(dayNumber);
+                dayEl.appendChild(dayHabits);
+                calendarEl.appendChild(dayEl);
+            }
+        }
+
+        function renderHabitsTracker() {
+            habitsTrackerEl.innerHTML = '';
+            
+            if (habits.length === 0) {
+                habitsTrackerEl.innerHTML = '<p style="text-align: center; padding: 20px; color: #6c757d;">Add habits to start tracking</p>';
+                return;
+            }
+            
+            // Tracker header
+            const trackerHeader = document.createElement('div');
+            trackerHeader.className = 'tracker-header';
+            
+            const habitNameHeader = document.createElement('div');
+            habitNameHeader.textContent = 'Habit';
+            trackerHeader.appendChild(habitNameHeader);
+            
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            
+            // Add day numbers
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayHeader = document.createElement('div');
+                dayHeader.textContent = day;
+                trackerHeader.appendChild(dayHeader);
+            }
+            
+            habitsTrackerEl.appendChild(trackerHeader);
+            
+            // Habit rows
+            habits.forEach(habit => {
+                const trackerRow = document.createElement('div');
+                trackerRow.className = 'tracker-row';
+                
+                const habitNameCell = document.createElement('div');
+                habitNameCell.textContent = habit.name;
+                trackerRow.appendChild(habitNameCell);
+                
+                const today = new Date();
+                const isCurrentMonth = today.getMonth() === currentMonth && today.getFullYear() === currentYear;
+                
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dateStr = `${currentYear}-${currentMonth + 1}-${day}`;
+                    const isChecked = habit.checks[dateStr];
+                    const isToday = isCurrentMonth && day === today.getDate();
+                    
+                    const dayCell = document.createElement('div');
+                    dayCell.className = 'day-cell';
+                    
+                    if (isChecked) {
+                        dayCell.classList.add('checked');
+                        dayCell.innerHTML = '<i class="fas fa-check"></i>';
+                    }
+                    
+                    if (isToday) {
+                        dayCell.classList.add('today');
+                    }
+                    
+                    dayCell.addEventListener('click', () => toggleCheck(habit.id, dateStr));
+                    trackerRow.appendChild(dayCell);
+                }
+                
+                habitsTrackerEl.appendChild(trackerRow);
+            });
+        }
+
+        function updateStats() {
+            habitsCountEl.textContent = habits.length;
+            
+            if (habits.length === 0) {
+                completionRateEl.textContent = '0%';
+                monthCompletionEl.textContent = '0%';
+                checkedDaysEl.textContent = '0';
+                totalDaysEl.textContent = '0';
+                return;
+            }
+            
+            // Calculate monthly completion rate
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            let totalPossibleChecks = habits.length * daysInMonth;
+            let actualChecks = 0;
+            let checkedDays = 0;
+            
+            habits.forEach(habit => {
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dateStr = `${currentYear}-${currentMonth + 1}-${day}`;
+                    if (habit.checks[dateStr]) {
+                        actualChecks++;
+                    }
+                }
+            });
+            
+            // Calculate days with at least one habit completed
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${currentYear}-${currentMonth + 1}-${day}`;
+                let dayCompleted = false;
+                
+                for (const habit of habits) {
+                    if (habit.checks[dateStr]) {
+                        dayCompleted = true;
+                        break;
+                    }
+                }
+                
+                if (dayCompleted) checkedDays++;
+            }
+            
+            const completionRate = totalPossibleChecks > 0 
+                ? Math.round((actualChecks / totalPossibleChecks) * 100) 
+                : 0;
+                
+            completionRateEl.textContent = `${completionRate}%`;
+            monthCompletionEl.textContent = `${completionRate}%`;
+            checkedDaysEl.textContent = checkedDays;
+            totalDaysEl.textContent = daysInMonth;
+        }
+
+        // Initialize the application
+        init();
+    </script>
+</body>
+</html>
